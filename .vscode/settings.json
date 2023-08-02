@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "*.lua": "lua",
+        "util.h": "c",
+        "generator.h": "c"
+    },
+    "cmake.configureOnOpen": true
+}
