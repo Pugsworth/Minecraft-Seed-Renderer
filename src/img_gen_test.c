@@ -341,7 +341,7 @@ BOOL WINAPI consoleHandler(DWORD signal) {
     return FALSE;
 }
 
-int main(int argc, char **argv)
+int mainOld(int argc, char **argv)
 {
     srand(time(NULL));
 
