@@ -2,7 +2,16 @@
     "files.associations": {
         "*.lua": "lua",
         "util.h": "c",
-        "generator.h": "c"
+        "generator.h": "c",
+        "types.h": "c",
+        "stat.h": "c"
     },
-    "cmake.configureOnOpen": true
+    "C_Cpp.default.includePath": [
+        "${workspaceFolder}/**",
+        "${workspaceFolder}/lib/**"
+    ],
+    "cmake.configureOnOpen": true,
+    "cmake.preferredGenerators": [
+        "MinGW Makefiles"
+    ],
 }
