@@ -172,25 +172,16 @@ int parse_cmd_test(char* cmd_name, ArgParser* parser)
 
     olivec_text(canvas, "hello, world!", 12, 12, olivec_default_font, 4, COLOR_WHITE_SMOKE);
 
-    for (int i = 5; i > 0; i--) {
-        int hh = 12 + (4-i)*6*4 + 12;
-        olivec_text(canvas, "0123456789", 12, hh, olivec_default_font, i, COLOR_WHITE_SMOKE);
-    }
-
-    // Save the image.
-    libattopng_t *png = libattopng_new(width, height, PNG_RGBA);
-
-    for (uint32_t y = 0; y < height; y++) {
-        int row = y * width;
-        for (uint32_t x = 0; x < width; x++) {
-            uint32_t idx = row + x;
-            uint32_t color = canvas.pixels[idx];
-            libattopng_set_pixel(png, x, y, color);
+    {
+        int y = 12;
+        for (int i = 5; i > 0; i--) {
+            // Glyphs are 6 pixels tall. Set a y offset of i (glyph scale) * 6 + 2(padding) plus the previous y offset.
+            y += (i+1) * 6 + 4;
+            olivec_text(canvas, "0123456789", 12, y, olivec_default_font, i, COLOR_WHITE_SMOKE);
         }
     }
 
-    libattopng_save(png, "renders/test.png");
-    libattopng_destroy(png);
+    savePNG("test.png", pixels, width, height);
 
     free(pixels);
 

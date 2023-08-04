@@ -9,3 +9,8 @@ Then, to build the project, run the following command from the root directory:
 ```shell
 make -C ./build
 ```
+
+Alternatively, we can leverage CMake itself to build and run:
+```shell
+cmake --build ./build --target run_test
+```

@@ -14,4 +14,5 @@
     "cmake.preferredGenerators": [
         "MinGW Makefiles"
     ],
+    "cmake.configureOnEdit": false,
 }

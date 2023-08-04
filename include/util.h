@@ -2,6 +2,9 @@
 
 #include <stdint.h>
 
+#define SPNG_STATIC
+#include <spng.h>
+
 #ifdef _MSC_VER
     #define inline __inline
 #endif
@@ -43,8 +46,17 @@ int draw_icon(unsigned char *icon, unsigned char *pixels, const unsigned int pw,
  * @param height
  * @return int
  */
-int savePNG(const char *path, const unsigned char *pixels,
+int savePNG(const char* path, const uint32_t* pixels,
         const unsigned int width, const unsigned int height);
+
+
+/**
+ * @brief Read a PNG file into a pixel buffer.
+ *
+ * @param path
+ * @param pixels
+ */
+readPNG(const char* path, uint32_t** pixels);
 
 
 /**

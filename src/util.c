@@ -95,9 +95,10 @@ int draw_icon(unsigned char* icon, unsigned char* pixels, const unsigned int pw,
     return 0;
 }
 
+/*
 #define RGBA(r,g,b,a) ((r) | ((g)<<8) | ((b)<<16) | ((a)<<24))
 
-int savePNG(const char *path, const unsigned char *pixels, const unsigned int width, const unsigned int height)
+int savePNG(const char* path, const uint32_t* pixels, const unsigned int width, const unsigned int height)
 {
     libattopng_t *png = libattopng_new(width, height, PNG_RGBA);
 
@@ -115,6 +116,54 @@ int savePNG(const char *path, const unsigned char *pixels, const unsigned int wi
     libattopng_destroy(png);
 
     return result != 0;
+}
+*/
+
+int savePNG(const char* path, const uint32_t* pixels, const unsigned int width, const unsigned int height)
+{
+    // Save the image.
+    spng_ctx *ctx = spng_ctx_new(SPNG_CTX_ENCODER);
+    spng_set_option(ctx, SPNG_ENCODE_TO_BUFFER, 1);
+
+    struct spng_ihdr ihdr = {0};
+    ihdr.bit_depth = 8;
+    ihdr.color_type = SPNG_COLOR_TYPE_TRUECOLOR_ALPHA;
+    ihdr.width = width;
+    ihdr.height = height;
+    spng_set_ihdr(ctx, &ihdr);
+
+    spng_set_crc_action(ctx, SPNG_CRC_USE, SPNG_CRC_USE);
+
+    // spng_decoded_image_size(ctx, SPNG_FMT_RGBA8, &out_size);
+    spng_set_option(ctx, SPNG_IMG_COMPRESSION_LEVEL, 1);
+    int ret = spng_encode_image(ctx, pixels, sizeof(uint32_t) * width * height, SPNG_FMT_PNG, SPNG_ENCODE_FINALIZE);
+    if (ret) {
+        printf("spng_encode_image() error: %s\n", spng_strerror(ret));
+        spng_ctx_free(ctx);
+        return -1;
+    }
+
+    size_t out_size;
+    void* out_buffer = NULL;
+    out_buffer = spng_get_png_buffer(ctx, &out_size, NULL);
+    if (!out_buffer) {
+        printf("spng_get_png_buffer() error: %s\n", spng_strerror(ret));
+        spng_ctx_free(ctx);
+        return -1;
+    }
+
+    FILE* png = fopen(path, "wb");
+    if (!png) {
+        fprintf(stderr, "Failed to open '%s' for writing: %#X\n", path, errno);
+        return -1;
+    }
+
+    fwrite(out_buffer, 1, out_size, png);
+    fclose(png);
+
+    spng_ctx_free(ctx);
+
+    return 0;
 }
 
 
@@ -191,3 +240,8 @@ uint64_t rand_u64()
     }
     return r;
 }
+
+
+
+
+uint8_t* readPPM(const char* filename);

@@ -1,26 +1,63 @@
-cmake_minimum_required(VERSION 3.13)
-project(mc_seed_renderer C)
-set(CMAKE_C_STANDARD 11)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.13)
+PROJECT(mc_seed_renderer C)
+SET(CMAKE_C_STANDARD 11)
 
-# add_custom_target(clean, COMMAND rm -rf ${CMAKE_BINARY_DIR}/*)
+# find zlib and add it as a dependency because apparently it cannot be found anywhere by anything
+# find_package(ZLIB REQUIRED)
 
-add_subdirectory(lib/libcubiomes)
+# if (ZLIB_FOUND)
+#     include_directories(${ZLIB_INCLUDE_DIRS})
+# else()
+#     message(FATAL_ERROR "Could not find zlib")
+# endif()
+
 
 FILE(GLOB SOURCE_FILES src/*.c)
 FILE(GLOB HEADER_FILES include/*.h)
+LIST(APPEND HEADER_FILES ${libspng_SOURCE_DIR}/spng/spng.h)
+LIST(APPEND SOURCE_FILES ${libspng_SOURCE_DIR}/spng/spng.c)
 LIST(APPEND HEADER_FILES ${CMAKE_CURRENT_SOURCE_DIR}/lib/olive.c/olive.c)
 LIST(APPEND SOURCE_FILES ${CMAKE_CURRENT_SOURCE_DIR}/lib/olive.c/olive.c)
 
-add_executable(mc_seed_renderer ${SOURCE_FILES} ${HEADER_FILES})
+message(DEBUG ${HEADER_FILES})
+message(DEBUG ${SOURCE_FILES})
 
-target_include_directories(mc_seed_renderer PUBLIC include)
-target_include_directories(mc_seed_renderer PUBLIC lib/libcubiomes)
-target_include_directories(mc_seed_renderer PUBLIC lib/olive.c)
+add_subdirectory(lib)
 
-target_link_libraries(mc_seed_renderer libcubiomes)
+
+ADD_EXECUTABLE(mc_seed_renderer ${SOURCE_FILES} ${HEADER_FILES})
+TARGET_INCLUDE_DIRECTORIES(mc_seed_renderer PRIVATE include)
+
+
+#
+# libspng
+#
+# Nothing?/
+
+
+#
+# olive.c
+#
+TARGET_INCLUDE_DIRECTORIES(mc_seed_renderer PUBLIC lib/olive.c)
+
+
+#
+# libcubiomes
+#
+ADD_SUBDIRECTORY(lib/libcubiomes)
+TARGET_INCLUDE_DIRECTORIES(mc_seed_renderer PUBLIC lib/libcubiomes)
+
+
+#
+# Finally, linking
+#
+# !!! z REQUIRED to link zlib for libspng
+TARGET_LINK_LIBRARIES(mc_seed_renderer libcubiomes z spng_static)
+
+
 
 # Run the executable with arguments
-add_custom_target(
+ADD_CUSTOM_TARGET(
     run_test
     COMMAND mc_seed_renderer test
     DEPENDS mc_seed_renderer
