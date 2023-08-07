@@ -8,11 +8,14 @@
     },
     "C_Cpp.default.includePath": [
         "${workspaceFolder}/**",
-        "${workspaceFolder}/lib/**"
+        "${workspaceFolder}/lib/**",
+        "${workspaceFolder}/lib/libcubeiomes",
+        "${workspaceFolder}/build/lib/**"
     ],
     "cmake.configureOnOpen": true,
     "cmake.preferredGenerators": [
         "MinGW Makefiles"
     ],
     "cmake.configureOnEdit": false,
+    "C_Cpp.default.compilerPath": "C:\\ProgramData\\chocolatey\\bin\\gcc.exe",
 }

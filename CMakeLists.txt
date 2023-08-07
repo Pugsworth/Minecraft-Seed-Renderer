@@ -52,7 +52,7 @@ TARGET_INCLUDE_DIRECTORIES(mc_seed_renderer PUBLIC lib/libcubiomes)
 # Finally, linking
 #
 # !!! z REQUIRED to link zlib for libspng
-TARGET_LINK_LIBRARIES(mc_seed_renderer libcubiomes z spng_static)
+TARGET_LINK_LIBRARIES(mc_seed_renderer libcubiomes z spng_static winmm)
 
 
 

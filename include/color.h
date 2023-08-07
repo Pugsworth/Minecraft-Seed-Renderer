@@ -46,12 +46,38 @@ enum {
     COLOR_DARK_SLATE_GREY = 0x2F4F4FFF,
 };
 
+/**
+ * My attempt to create a fairly minimal endianness agnostic color library.
+ * There are a couple formats the color can be in:
+ * |          | Little Endian | Big Endian |
+ * | RGBA8888 | ABGR        | RGBA     |
+ * | ABGR8888 | ABGR        | RGBA     |
+ * | RGB888   | BGR         | RGB      |
+ * | BGR888   | BGR         | RGB      |
+ *
+ *
+ * by default, this library works with RGBA since it's how humans think about color.
+ */
+
+struct rgba_t {
+    uint8_t r, g, b, a;
+};
+
+struct abgr_t {
+    uint8_t a, b, g, r;
+};
 
 
+/**
+ * @brief Hold all the information for a color.
+ * Can be used in RGBA or ABGR format.
+ */
 typedef union {
-    struct { uint8_t r, g, b, a; };
-    uint32_t rgba;
-} color_t;
+    struct rgba_t rgba;
+    struct abgr_t abgr;
+
+    uint32_t value;
+} Color32;
 
 /**
  * @brief Create a color union from the given RGBA values.
@@ -60,17 +86,17 @@ typedef union {
  * @param g green channel.
  * @param b blue channel.
  * @param a alpha channel.
- * @return color_t
+ * @return Color32
  */
-color_t color(uint8_t r, uint8_t g, uint8_t b, uint8_t a);
+Color32 color(uint8_t r, uint8_t g, uint8_t b, uint8_t a);
 
 /**
  * @brief Create a color union from the given uint32 value in RGBA format.
  *
  * @param rgba
- * @return color_t
+ * @return Color32
  */
-color_t color_from_rgba(uint32_t rgba);
+Color32 color_from_rgba(uint32_t rgba);
 
 /**
  * @brief Convert the given color union to a uint32 value in RGBA format.
@@ -78,7 +104,7 @@ color_t color_from_rgba(uint32_t rgba);
  * @param c
  * @return uint32_t
  */
-uint32_t color_to_rgba(color_t c);
+uint32_t color_to_rgba(Color32 c);
 
 
 /**
@@ -88,3 +114,29 @@ uint32_t color_to_rgba(color_t c);
  * @return uint32_t
  */
 uint32_t color_swap(uint32_t rgba);
+
+/**
+ * @brief Packs every 3 bytes from [rgb888] into a single 32-bit integer in RGBA format.
+ * e.g. [r, g, b, r, g, b, ...] -> [rgba, rgba, ...]
+ * Requires rgb32 to be allocated with width * height bytes.
+ *
+ * @param rgb888
+ * @param rgb32
+ * @param width
+ * @param height
+ * @return int
+ */
+int color_rgb888_to_rgba32(const uint8_t* rgb888, uint32_t* rgb32, const unsigned int width, const unsigned int height);
+
+/**
+ * @brief Unpacks a 32-bit integer in RGBA format into 3 bytes in [rgb888].
+ * e.g. [rgba, rgba, ...] -> [r, g, b, r, g, b, ...]
+ * Requires rgb888 to be allocated with 3 * width * height bytes.
+ *
+ * @param rgb32
+ * @param rgb888
+ * @param width
+ * @param height
+ * @return int
+ */
+int color_rgba32_to_rgb888(const uint32_t* rgb32, uint8_t* rgb888, const unsigned int width, const unsigned int height);

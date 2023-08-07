@@ -9,7 +9,7 @@
 #include <unistd.h>
 #endif
 
-#include "libattopng.h"
+// #include "libattopng.h"
 #include "util.h"
 
 int draw_grid(unsigned char *pixels, const unsigned int sx, const unsigned int sy, const unsigned int grid_scale)
@@ -95,30 +95,6 @@ int draw_icon(unsigned char* icon, unsigned char* pixels, const unsigned int pw,
     return 0;
 }
 
-/*
-#define RGBA(r,g,b,a) ((r) | ((g)<<8) | ((b)<<16) | ((a)<<24))
-
-int savePNG(const char* path, const uint32_t* pixels, const unsigned int width, const unsigned int height)
-{
-    libattopng_t *png = libattopng_new(width, height, PNG_RGBA);
-
-    for (unsigned int y = 0; y < height; y++)
-    {
-        unsigned int row = y * width * 3;
-        for (unsigned int x = 0; x < width; x++)
-        {
-            unsigned int idx = row + x * 3;
-            libattopng_set_pixel(png, x, y, RGBA(pixels[idx], pixels[idx+1], pixels[idx+2], 255));
-        }
-    }
-
-    int result = libattopng_save(png, path);
-    libattopng_destroy(png);
-
-    return result != 0;
-}
-*/
-
 int savePNG(const char* path, const uint32_t* pixels, const unsigned int width, const unsigned int height)
 {
     // Save the image.
@@ -160,6 +136,84 @@ int savePNG(const char* path, const uint32_t* pixels, const unsigned int width, 
 
     fwrite(out_buffer, 1, out_size, png);
     fclose(png);
+
+    spng_ctx_free(ctx);
+
+    return 0;
+}
+
+int readPNG(const char* path, uint32_t** pixels,
+    unsigned int* width, unsigned int* height)
+{
+    FILE* png = fopen(path, "rb");
+    if (!png) {
+        fprintf(stderr, "Failed to open '%s' for reading: %#X\n", path, errno);
+        return -1;
+    }
+
+    fseek(png, 0, SEEK_END);
+    size_t png_size = ftell(png);
+    rewind(png);
+
+    uint8_t* png_buffer = (uint8_t*)calloc(png_size, 1);
+    if (!png_buffer) {
+        fprintf(stderr, "Failed to allocate %zu bytes for PNG buffer\n", png_size);
+        return -1;
+    }
+
+    fread(png_buffer, png_size, 1, png);
+    fclose(png);
+
+    int ret = 0; // Return codes for error handling
+
+    spng_ctx* ctx = spng_ctx_new(0);
+    spng_set_crc_action(ctx, SPNG_CRC_USE, SPNG_CRC_USE);
+
+    size_t limit = 1024 * 1024 * 100; // 100 MB
+    spng_set_chunk_limits(ctx, limit, limit);
+
+    if (SPNG_OK != (ret = spng_set_png_buffer(ctx, png_buffer, png_size))) {
+        fprintf(stderr, "spng_set_png_buffer() error: %s\n", spng_strerror(ret));
+        return -1;
+    }
+
+    struct spng_ihdr ihdr = {0};
+    if (SPNG_OK != (ret = spng_get_ihdr(ctx, &ihdr))) {
+        fprintf(stderr, "spng_get_ihdr() error: %s\n", spng_strerror(ret));
+        return -1;
+    }
+
+    if (ihdr.bit_depth != 8) {
+        fprintf(stderr, "Unsupported bit depth: %u\n", ihdr.bit_depth);
+        return -1;
+    }
+
+    // if (ihdr.color_type != SPNG_COLOR_TYPE_TRUECOLOR_ALPHA) {
+    //     fprintf(stderr, "Unsupported color type: %u\n", ihdr.color_type);
+    //     return -1;
+    // }
+
+    *width = ihdr.width;
+    *height = ihdr.height;
+
+    size_t out_size;
+    if (SPNG_OK != spng_decoded_image_size(ctx, SPNG_FMT_RGBA8, &out_size)) {
+        fprintf(stderr, "spng_decoded_image_size() error: %s\n", spng_strerror(ret));
+        return -1;
+    }
+
+    if (out_size != sizeof(uint32_t) * ihdr.width * ihdr.height) {
+        fprintf(stderr, "Image size mismatch\n");
+        return -1;
+    }
+
+    // Create the buffer and set the pointer to pixels;
+    *pixels = (uint32_t*)calloc(1, out_size);
+
+    if (SPNG_OK != spng_decode_image(ctx, *pixels, out_size, SPNG_FMT_RGBA8, SPNG_DECODE_TRNS)) {
+        fprintf(stderr, "spng_decode_image() error: %s\n", spng_strerror(ret));
+        return -1;
+    }
 
     spng_ctx_free(ctx);
 
@@ -245,3 +299,104 @@ uint64_t rand_u64()
 
 
 uint8_t* readPPM(const char* filename);
+
+
+
+int writeBiomesToBuffer(uint32_t* buffer,
+    uint8_t biomesColors[256][3], const int* biomes,
+    const unsigned int sx, const unsigned int sy,
+    const unsigned int pixelScale, const int flip)
+{
+    unsigned int i, j;
+    int containsInvalidBiomes = 0;
+
+    for (j = 0; j < sy; j++) {
+        for (i = 0; i < sx; i++) {
+            int id = biomes[j*sx+i];
+            unsigned int r, g, b;
+
+            if (id < 0 || id >= 255) {
+                containsInvalidBiomes = 1;
+                r = biomesColors[id&0x7f][0]-40; r = (r>0xff) ? 0x00 : r&0xff;
+                g = biomesColors[id&0x7f][1]-40; g = (g>0xff) ? 0x00 : g&0xff;
+                b = biomesColors[id&0x7f][2]-40; b = (b>0xff) ? 0x00 : b&0xff;
+            }
+            else {
+                r = biomesColors[id][0];
+                g = biomesColors[id][1];
+                b = biomesColors[id][2];
+            }
+
+            unsigned m, n;
+
+
+        }
+    }
+}
+
+
+int rgb888torgb32(const unsigned char* rgb888, uint32_t* rgb32, const unsigned int width, const unsigned int height)
+{
+    unsigned int i, j;
+
+    for (j = 0; j < height; j++) {
+        for (i = 0; i < width; i++) {
+            unsigned int idx = 3 * (i + j * width);
+            unsigned int r = rgb888[idx];
+            unsigned int g = rgb888[idx + 1];
+            unsigned int b = rgb888[idx + 2];
+            unsigned int a = 255;
+            rgb32[i + j * width] = (a << 24) | (b << 16) | (g << 8) | r;
+        }
+    }
+
+    return 0;
+}
+
+
+
+void dump_memory(void* address, const int offsetBack, const unsigned int offsetForward)
+{
+    int from = offsetBack;
+    int to = offsetForward;
+
+    if (offsetBack > 0) {
+        from = -from;
+    }
+
+    int c = 0;
+
+    // Dump 8 bytes per line.
+    for (int i = from; i < to; i++) {
+        unsigned char b = *((unsigned char*)address + i);
+
+        printf("%02X ", b);
+
+        if (c++ == 7) {
+            printf("\n");
+            c = 0;
+        }
+    }
+
+    printf("\n");
+}
+
+Olivec_Canvas* loadPNGToCanvas(const char* path)
+{
+    int width, height;
+    uint32_t* data = NULL;
+
+    if (0 != readPNG(path, &data, &width, &height)) {
+        fprintf(stderr, "Failed to read PNG '%s'\n", path);
+        return NULL;
+    }
+
+    Olivec_Canvas* canvas = (Olivec_Canvas*)calloc(1, sizeof(Olivec_Canvas));
+    Olivec_Canvas temp = olivec_canvas(data, width, height, width);
+    canvas->height  = temp.height;
+    canvas->width   = temp.width;
+    canvas->stride  = temp.stride;
+    canvas->pixels  = temp.pixels;
+
+    return canvas;
+}

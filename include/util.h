@@ -10,6 +10,31 @@
 #endif
 #define force_inline __attribute__((always_inline)) inline
 
+#define OLIVEC_AA_RES 1
+#define OLIVEC_IMPLEMENTATION
+#include <olive.c>
+
+
+/**
+ * @brief Some common structures that can be useful.
+ */
+
+// Captures a 2D vector with the most common uses
+typedef union {
+    // X/Y for Z axis coordinate systems.
+    // X/Z for Y axis coordinate systems.
+    struct {
+        int x;
+        union {
+            int y, z;
+        };
+    };
+    // Width/Height
+    struct { int w, h; };
+    struct { int width, height; };
+    int v[2];
+} Vec2;
+
 
 /**
  * @brief Draws a grid over the given pixel buffer.
@@ -56,7 +81,8 @@ int savePNG(const char* path, const uint32_t* pixels,
  * @param path
  * @param pixels
  */
-readPNG(const char* path, uint32_t** pixels);
+int readPNG(const char* path, uint32_t** pixels,
+    unsigned int* width, unsigned int* height);
 
 
 /**
@@ -101,3 +127,20 @@ int64_t rand_64();
  * @return uint64_t
  */
 uint64_t rand_u64();
+
+
+/**
+ * @brief Dumps a section of memory to console for inspection.
+ * Dumps 8 bytes at a time.
+ *
+ * @param address Memory address to start dumping.
+ * @param offsetBack Negative offset from address.
+ * @param offsetForward Positive offset from address.
+ */
+void dump_memory(void* address, const int offsetBack, const unsigned int offsetForward);
+
+
+void getHeightShading();
+
+
+Olivec_Canvas* loadPNGToCanvas(const char* path);

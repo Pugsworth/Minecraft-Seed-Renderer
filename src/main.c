@@ -2,20 +2,22 @@
 #include <stdlib.h>
 #include <time.h>
 
+// olive.c must either be included before util.h
+// or OLIVEC_IMPLEMENTATION must be undefined after util.h because that carries over.
+#include <olive.c>
 #include "util.h"
+
 #include "args.h"
 #include "icons.h"
 #include "dynamicarray.h"
 #include "color.h"
-#include "libattopng.h"
+// #include "libattopng.h"
 
 #include "generator.h"
 #include "finders.h"
 
 
-#define OLIVEC_AA_RES 2
-#define OLIVEC_IMPLEMENTATION
-#include <olive.c>
+#include "audio.h"
 
 
 #define VERSION "0.1.0"
@@ -42,16 +44,31 @@ int in_biomes(int biome, int *biomes)
     return 0;
 }
 
+// TODO: Should be able to specify the world width/height as well as the image width/height.
+//     Right now, they are kinda tied together.
 int generate_seed_image(uint64_t seed, int map_scale, int map_width, int map_height, int pix4cell)
 {
-    if (!seed)
-    {
-        printf("randomizing seed\n");
-        fflush(stdout);
+    int error_code = 0;
+
+    // Filename
+    if (!seed) {
+        printf("Randomizing seed...\n");
         seed = time(NULL);
+        printf("New Seed: %llu\n", seed);
     }
 
-    int image_width = pix4cell * map_width, image_height = pix4cell * map_height;
+    char* map_name = (char*)malloc(64);
+    sprintf(map_name, "renders/map_%lli.png", seed);
+
+    int res = make_dirs("renders");
+    if (!is_success(res)) {
+        fprintf(stderr, "Failed to create renders directory, exiting!\n");
+        error_code = -1;
+        goto CLEANUP;
+    }
+
+    int image_width = pix4cell * map_width;
+    int image_height = pix4cell * map_height;
 
     fprintf(stdout, "Generating image...\n");
     printf("%ix%i with scale %i; pixels per cell: %i\n", image_width, image_height, map_scale, pix4cell);
@@ -61,26 +78,24 @@ int generate_seed_image(uint64_t seed, int map_scale, int map_width, int map_hei
 
     applySeed(&g, DIM_OVERWORLD, seed);
 
+    // This isn't the best way to do this, but whatever...
     Pos spawn = getSpawn(&g);
     int spawn_biome = getBiomeAt(&g, 1, spawn.x, 255, spawn.z);
-    printf("Found spawn biome in %i\n", spawn_biome);
 
-    if (in_biomes(spawn_biome, OCEAN_BIOMES))
-    {
-        spawn.x = spawn.z = 0;
+    if (isOceanic(spawn_biome)) {
+    // if (in_biomes(spawn_biome, OCEAN_BIOMES)) {
+        spawn.x = spawn.z = 0; // If spawn is in the ocean, set it to 0,0
     }
 
     Range r;
-    // 1:16, a.k.a. horizontal chunk scaling
-    r.scale = map_scale;
+    r.scale = map_scale; // 1:16, a.k.a. horizontal chunk scaling
     // Define the position and size for a horizontal area:
     r.x = spawn.x - map_width / 2, r.z = spawn.z - map_height / 2; // position (x,z)
     r.sx = map_width, r.sz = map_height;                           // size (width,height)
-    // Set the vertical range as a plane near sea level at scale 1:4.
-    r.y = 255, r.sy = 1;
+    r.y = 255, r.sy = 1; // Set the vertical range as a plane near sea level at scale 1:4.
 
     // Allocate the necessary cache for this range.
-    int *biomeIds = allocCache(&g, r);
+    int* biomeIds = allocCache(&g, r);
 
     // Generate the area inside biomeIds, indexed as:
     // biomeIds[i_y*r.sx*r.sz + i_z*r.sx + i_x]
@@ -89,54 +104,69 @@ int generate_seed_image(uint64_t seed, int map_scale, int map_width, int map_hei
 
     unsigned char biomeColors[256][3];
     initBiomeColors(biomeColors);
-    unsigned char *rgb = (unsigned char *)malloc(3 * image_width * image_height);
+    // TODO: Make a new biomesToImage function for building a Color32 array instead.
+    unsigned char* rgb = (unsigned char*)malloc(3 * image_width * image_height);
     biomesToImage(rgb, biomeColors, biomeIds, r.sx, r.sz, pix4cell, 2);
+
+
+    /**
+     * Build an image of the heights of the terrain.
+     *
+    int getSurfaceHeight(
+        const double ncol00[], const double ncol01[],
+        const double ncol10[], const double ncol11[],
+        int colymin, int colymax, int blockspercell, double dx, double dz)
+     */
+
+
     // draw_grid(rgb, r.sx, r.sz, 16);
     // TODO: Draw various border sizes to determine the maximum size of the border.
 
-    struct
-    {
-        int x, y;
-    } center = {image_width / 2, image_height / 2};
-    draw_icon(COMPASS_ICON, rgb, image_width, image_height, center.x, center.y, COMPASS_WIDTH, COMPASS_HEIGHT);
-
-    char *map_name = (char *)malloc(64);
-    sprintf(map_name, "renders/map_%lli.png", seed);
-
-    int res = make_dirs("renders");
-    if (is_success(res))
-    {
-        printf("Created renders directory!\n");
-    }
-    else
-    {
-        fprintf(stderr, "Failed to create renders directory, exiting!\n");
-        return EXIT_FAILURE;
+    uint32_t* icon_pixels = NULL;
+    unsigned int icon_width = 0, icon_height = 0;
+    if (readPNG("assets/icons/compass_16.png", &icon_pixels, &icon_width, &icon_height)) {
+        fprintf(stderr, "Failed to read compass icon!\n");
+        error_code = -1;
+        goto CLEANUP;
     }
 
-    // Save the RGB buffer to a PPM image file.
-    // savePPM("map.ppm", rgb, image_width, image_height);
-    if (is_success(savePNG(map_name, rgb, image_width, image_height)))
-    {
+    uint32_t* pixels = (uint32_t*)calloc(image_width * image_height, sizeof(uint32_t));
+    color_rgb888_to_rgba32(rgb, pixels, image_width, image_height);
+
+    // Put the png into an olivec_sprite and draw it to the main display before saving.
+    Olivec_Canvas icon_compass = olivec_canvas(icon_pixels, icon_width, icon_height, icon_width);
+    Olivec_Canvas canvas = olivec_canvas(pixels, image_width, image_height, image_width);
+    olivec_sprite_blend(
+        canvas,                             // canvas
+        (image_width/2) - (icon_width/2),   // x
+        (image_height/2) - (icon_height/2), // y
+        icon_width, icon_height,            // icon size
+        icon_compass                       // icon canvas
+    );
+
+    if (is_success(savePNG(map_name, canvas.pixels, image_width, image_height))) {
         fprintf(stdout, "Saved image to %s!\n", map_name);
     }
-    else
-    {
+    else {
         fprintf(stderr, "Failed to save image!\n");
-        return -1;
+        error_code = -1;
+        goto CLEANUP;
     }
+
+    fprintf(stdout, "Done!\n");
+
+CLEANUP:
 
     // Clean up.
     free(map_name);
     free(biomeIds);
     free(rgb);
-
-    fprintf(stdout, "Done!\n");
+    free(pixels);
 
     fflush(stderr);
     fflush(stdout);
 
-    return 0;
+    return error_code;
 }
 
 struct Arguments
@@ -214,6 +244,14 @@ int parse_cmd_render(char* cmd_name, ArgParser* parser)
     printf("Seed: %llu\n", seed);
 
     generate_seed_image(seed, map_scale, map_width, map_height, pix4cell);
+
+    StructureConfig* conf = NULL;
+    getStructureConfig(Ruined_Portal, MC_VERSION, &conf);
+    Pos pos;
+    getStructurePos(Ruined_Portal, MC_VERSION, seed, 0, 0, &pos);
+    printf("Ruined Portal found at: %i, %i\n", pos.x, pos.z);
+
+    audio_play(AUDIO_ALERT);
 }
 
 int parse_arguments(struct Arguments* arguments, int argc, char** argv)
