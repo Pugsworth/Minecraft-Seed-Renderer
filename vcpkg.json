@@ -1,0 +1,9 @@
+{
+  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
+  "name": "mc-seed-renderer",
+  "version": "0.0.1",
+  "dependencies": [
+    { "name": "lua", "version>=": "5.4.6" }
+  ],
+  "builtin-baseline": "a109b7ccb27f0b90871c560647bbbc7ecd3da127"
+}

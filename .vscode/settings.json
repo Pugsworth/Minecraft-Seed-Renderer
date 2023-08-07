@@ -10,7 +10,9 @@
         "${workspaceFolder}/**",
         "${workspaceFolder}/lib/**",
         "${workspaceFolder}/lib/libcubeiomes",
-        "${workspaceFolder}/build/lib/**"
+        "${workspaceFolder}/build/lib/**",
+        "${workspaceFolder}/vcpkg_installed/x64-windows/include/**",
+        "${workspaceFolder}/vcpkg_installed/x86-windows/include/**"
     ],
     "cmake.configureOnOpen": true,
     "cmake.preferredGenerators": [

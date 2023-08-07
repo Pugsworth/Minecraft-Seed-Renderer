@@ -19,6 +19,11 @@
 
 #include "audio.h"
 
+// Lua
+#include <lua.h>
+#include <lualib.h>
+#include <lauxlib.h>
+
 
 #define VERSION "0.1.0"
 #define MC_VERSION MC_1_19_2
@@ -218,8 +223,38 @@ int parse_cmd_test(char* cmd_name, ArgParser* parser)
     puts("Done!");
 }
 
+int parse_cmd_lua(char* cmd_name, ArgParser* parser)
+{
+    int status, result, i;
+    lua_State* L;
+
+    printf("Lua Version: %s\n", LUA_VERSION);
+    printf("Running Lua test...\n");
+
+    L = luaL_newstate();
+    luaL_openlibs(L);
+
+    lua_getglobal(L, "print");
+    printf("Type: %s\n", lua_typename(L, lua_type(L, -1)));
+    lua_pushstring(L, "Hello, World!");
+    result = lua_pcall(L, 1, 1, 0);
+    if (result != LUA_OK) {
+        fprintf(stderr, "Failed to call print: %s\n", lua_tostring(L, -1));
+        return -1;
+    }
+
+    lua_load(L, NULL, "print('Hello, World!')", "test", NULL);
+
+    fflush(stdout);
+
+    lua_close(L);
+
+    return 0;
+}
+
 int parse_cmd_search(char* cmd_name, ArgParser* parser)
 {
+    return 0;
 }
 
 int parse_cmd_render(char* cmd_name, ArgParser* parser)
@@ -304,6 +339,15 @@ int parse_arguments(struct Arguments* arguments, int argc, char** argv)
     ap_set_helptext(test_parser, "For testing purposes.");
     ap_set_cmd_callback(test_parser, parse_cmd_test);
 
+
+    ArgParser* lua_parser = ap_new_cmd(parser, "lua");
+    if (!lua_parser) {
+        fprintf(stderr, "Failed to allocate memory for lua_parser!\n");
+        return -1;
+    }
+    ap_set_helptext(lua_parser, "Testing Lua integration.");
+    ap_set_cmd_callback(lua_parser, parse_cmd_lua);
+
     if (!ap_parse(parser, argc, argv))
     {
         fprintf(stderr, "Failed to parse arguments!\n");
@@ -329,6 +373,8 @@ int parse_arguments(struct Arguments* arguments, int argc, char** argv)
 int main(int argc, char *argv[])
 {
     srand(time(NULL));
+
+    printf("mc_seed_renderer v%s\n", VERSION);
 
     struct Arguments args = {0};
     parse_arguments(&args, argc, argv);
