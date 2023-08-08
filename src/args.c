@@ -239,7 +239,7 @@ static bool map_grow(Map* map) {
 
     map->count = 0;
     map->capacity = new_capacity;
-    map->max_load_threshold = new_capacity * MAP_MAX_LOAD;
+    map->max_load_threshold = (int)(new_capacity * MAP_MAX_LOAD);
     map->entries = new_entries;
 
     for (int i = 0; i < old_capacity; i++) {

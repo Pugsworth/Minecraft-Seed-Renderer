@@ -1,0 +1,66 @@
+[
+{
+  "directory": "z:\\Projects\\Minecraft Seed Renderer",
+  "arguments": ["C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\BuildTools\\VC\\Tools\\MSVC\\14.29.30133\\bin\\HostX64\\x64\\cl.exe", "/c", "/nologo", "/Zi", "/FS", "/Fdbuild\\windows\\x64\\debug\\libcubiomes.pdb", "/Od", "/MD", "/Ilib\\libcubiomes", "/EHsc", "/Fobuild\\.objs\\libcubiomes\\windows\\x64\\debug\\lib\\libcubiomes\\biome_tree.c.obj", "lib\\libcubiomes\\biome_tree.c"],
+  "file": "lib\\libcubiomes\\biome_tree.c"
+},
+{
+  "directory": "z:\\Projects\\Minecraft Seed Renderer",
+  "arguments": ["C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\BuildTools\\VC\\Tools\\MSVC\\14.29.30133\\bin\\HostX64\\x64\\cl.exe", "/c", "/nologo", "/Zi", "/FS", "/Fdbuild\\windows\\x64\\debug\\libcubiomes.pdb", "/Od", "/MD", "/Ilib\\libcubiomes", "/EHsc", "/Fobuild\\.objs\\libcubiomes\\windows\\x64\\debug\\lib\\libcubiomes\\finders.c.obj", "lib\\libcubiomes\\finders.c"],
+  "file": "lib\\libcubiomes\\finders.c"
+},
+{
+  "directory": "z:\\Projects\\Minecraft Seed Renderer",
+  "arguments": ["C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\BuildTools\\VC\\Tools\\MSVC\\14.29.30133\\bin\\HostX64\\x64\\cl.exe", "/c", "/nologo", "/Zi", "/FS", "/Fdbuild\\windows\\x64\\debug\\libcubiomes.pdb", "/Od", "/MD", "/Ilib\\libcubiomes", "/EHsc", "/Fobuild\\.objs\\libcubiomes\\windows\\x64\\debug\\lib\\libcubiomes\\generator.c.obj", "lib\\libcubiomes\\generator.c"],
+  "file": "lib\\libcubiomes\\generator.c"
+},
+{
+  "directory": "z:\\Projects\\Minecraft Seed Renderer",
+  "arguments": ["C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\BuildTools\\VC\\Tools\\MSVC\\14.29.30133\\bin\\HostX64\\x64\\cl.exe", "/c", "/nologo", "/Zi", "/FS", "/Fdbuild\\windows\\x64\\debug\\libcubiomes.pdb", "/Od", "/MD", "/Ilib\\libcubiomes", "/EHsc", "/Fobuild\\.objs\\libcubiomes\\windows\\x64\\debug\\lib\\libcubiomes\\layers.c.obj", "lib\\libcubiomes\\layers.c"],
+  "file": "lib\\libcubiomes\\layers.c"
+},
+{
+  "directory": "z:\\Projects\\Minecraft Seed Renderer",
+  "arguments": ["C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\BuildTools\\VC\\Tools\\MSVC\\14.29.30133\\bin\\HostX64\\x64\\cl.exe", "/c", "/nologo", "/Zi", "/FS", "/Fdbuild\\windows\\x64\\debug\\libcubiomes.pdb", "/Od", "/MD", "/Ilib\\libcubiomes", "/EHsc", "/Fobuild\\.objs\\libcubiomes\\windows\\x64\\debug\\lib\\libcubiomes\\noise.c.obj", "lib\\libcubiomes\\noise.c"],
+  "file": "lib\\libcubiomes\\noise.c"
+},
+{
+  "directory": "z:\\Projects\\Minecraft Seed Renderer",
+  "arguments": ["C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\BuildTools\\VC\\Tools\\MSVC\\14.29.30133\\bin\\HostX64\\x64\\cl.exe", "/c", "/nologo", "/Zi", "/FS", "/Fdbuild\\windows\\x64\\debug\\libcubiomes.pdb", "/Od", "/MD", "/Ilib\\libcubiomes", "/EHsc", "/Fobuild\\.objs\\libcubiomes\\windows\\x64\\debug\\lib\\libcubiomes\\quadbase.c.obj", "lib\\libcubiomes\\quadbase.c"],
+  "file": "lib\\libcubiomes\\quadbase.c"
+},
+{
+  "directory": "z:\\Projects\\Minecraft Seed Renderer",
+  "arguments": ["C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\BuildTools\\VC\\Tools\\MSVC\\14.29.30133\\bin\\HostX64\\x64\\cl.exe", "/c", "/nologo", "/Zi", "/FS", "/Fdbuild\\windows\\x64\\debug\\libcubiomes.pdb", "/Od", "/MD", "/Ilib\\libcubiomes", "/EHsc", "/Fobuild\\.objs\\libcubiomes\\windows\\x64\\debug\\lib\\libcubiomes\\util.c.obj", "lib\\libcubiomes\\util.c"],
+  "file": "lib\\libcubiomes\\util.c"
+},
+{
+  "directory": "z:\\Projects\\Minecraft Seed Renderer",
+  "arguments": ["C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\BuildTools\\VC\\Tools\\MSVC\\14.29.30133\\bin\\HostX64\\x64\\cl.exe", "/c", "/nologo", "/Zi", "/FS", "/Fdbuild\\windows\\x64\\debug\\compile.mc_seed_renderer.pdb", "/W3", "/O2", "/fp:fast", "/std:c11", "/MD", "/Iinclude", "/Ilib\\libcubiomes", "/DSPNG_STATIC", "/EHsc", "/IC:\\Users\\sbox\\AppData\\Local\\.xmake\\packages\\l\\libspng\\v0.7.1\\f5f3aeeac7514361a04b985c6f19c5a8\\include", "/IC:\\Users\\sbox\\AppData\\Local\\.xmake\\packages\\z\\zlib\\v1.2.13\\c49d6b3d5d794a45b48068cfc464fcf6\\include", "/IC:\\Users\\sbox\\AppData\\Local\\.xmake\\packages\\o\\olive.c\\2022.12.14\\5bad3ea745d6424aaea4e5aa437538ba\\include", "/IC:\\Users\\sbox\\AppData\\Local\\.xmake\\packages\\l\\lua\\v5.4.4\\8864a9cbabd64a59a8b59fa8e1d73971\\include\\lua", "/Fobuild\\.objs\\mc_seed_renderer\\windows\\x64\\debug\\src\\args.c.obj", "src\\args.c"],
+  "file": "src\\args.c"
+},
+{
+  "directory": "z:\\Projects\\Minecraft Seed Renderer",
+  "arguments": ["C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\BuildTools\\VC\\Tools\\MSVC\\14.29.30133\\bin\\HostX64\\x64\\cl.exe", "/c", "/nologo", "/Zi", "/FS", "/Fdbuild\\windows\\x64\\debug\\compile.mc_seed_renderer.pdb", "/W3", "/O2", "/fp:fast", "/std:c11", "/MD", "/Iinclude", "/Ilib\\libcubiomes", "/DSPNG_STATIC", "/EHsc", "/IC:\\Users\\sbox\\AppData\\Local\\.xmake\\packages\\l\\libspng\\v0.7.1\\f5f3aeeac7514361a04b985c6f19c5a8\\include", "/IC:\\Users\\sbox\\AppData\\Local\\.xmake\\packages\\z\\zlib\\v1.2.13\\c49d6b3d5d794a45b48068cfc464fcf6\\include", "/IC:\\Users\\sbox\\AppData\\Local\\.xmake\\packages\\o\\olive.c\\2022.12.14\\5bad3ea745d6424aaea4e5aa437538ba\\include", "/IC:\\Users\\sbox\\AppData\\Local\\.xmake\\packages\\l\\lua\\v5.4.4\\8864a9cbabd64a59a8b59fa8e1d73971\\include\\lua", "/Fobuild\\.objs\\mc_seed_renderer\\windows\\x64\\debug\\src\\color.c.obj", "src\\color.c"],
+  "file": "src\\color.c"
+},
+{
+  "directory": "z:\\Projects\\Minecraft Seed Renderer",
+  "arguments": ["C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\BuildTools\\VC\\Tools\\MSVC\\14.29.30133\\bin\\HostX64\\x64\\cl.exe", "/c", "/nologo", "/Zi", "/FS", "/Fdbuild\\windows\\x64\\debug\\compile.mc_seed_renderer.pdb", "/W3", "/O2", "/fp:fast", "/std:c11", "/MD", "/Iinclude", "/Ilib\\libcubiomes", "/DSPNG_STATIC", "/EHsc", "/IC:\\Users\\sbox\\AppData\\Local\\.xmake\\packages\\l\\libspng\\v0.7.1\\f5f3aeeac7514361a04b985c6f19c5a8\\include", "/IC:\\Users\\sbox\\AppData\\Local\\.xmake\\packages\\z\\zlib\\v1.2.13\\c49d6b3d5d794a45b48068cfc464fcf6\\include", "/IC:\\Users\\sbox\\AppData\\Local\\.xmake\\packages\\o\\olive.c\\2022.12.14\\5bad3ea745d6424aaea4e5aa437538ba\\include", "/IC:\\Users\\sbox\\AppData\\Local\\.xmake\\packages\\l\\lua\\v5.4.4\\8864a9cbabd64a59a8b59fa8e1d73971\\include\\lua", "/Fobuild\\.objs\\mc_seed_renderer\\windows\\x64\\debug\\src\\dynamicarray.c.obj", "src\\dynamicarray.c"],
+  "file": "src\\dynamicarray.c"
+},
+{
+  "directory": "z:\\Projects\\Minecraft Seed Renderer",
+  "arguments": ["C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\BuildTools\\VC\\Tools\\MSVC\\14.29.30133\\bin\\HostX64\\x64\\cl.exe", "/c", "/nologo", "/Zi", "/FS", "/Fdbuild\\windows\\x64\\debug\\compile.mc_seed_renderer.pdb", "/W3", "/O2", "/fp:fast", "/std:c11", "/MD", "/Iinclude", "/Ilib\\libcubiomes", "/DSPNG_STATIC", "/EHsc", "/IC:\\Users\\sbox\\AppData\\Local\\.xmake\\packages\\l\\libspng\\v0.7.1\\f5f3aeeac7514361a04b985c6f19c5a8\\include", "/IC:\\Users\\sbox\\AppData\\Local\\.xmake\\packages\\z\\zlib\\v1.2.13\\c49d6b3d5d794a45b48068cfc464fcf6\\include", "/IC:\\Users\\sbox\\AppData\\Local\\.xmake\\packages\\o\\olive.c\\2022.12.14\\5bad3ea745d6424aaea4e5aa437538ba\\include", "/IC:\\Users\\sbox\\AppData\\Local\\.xmake\\packages\\l\\lua\\v5.4.4\\8864a9cbabd64a59a8b59fa8e1d73971\\include\\lua", "/Fobuild\\.objs\\mc_seed_renderer\\windows\\x64\\debug\\src\\img_gen_test.c.obj", "src\\img_gen_test.c"],
+  "file": "src\\img_gen_test.c"
+},
+{
+  "directory": "z:\\Projects\\Minecraft Seed Renderer",
+  "arguments": ["C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\BuildTools\\VC\\Tools\\MSVC\\14.29.30133\\bin\\HostX64\\x64\\cl.exe", "/c", "/nologo", "/Zi", "/FS", "/Fdbuild\\windows\\x64\\debug\\compile.mc_seed_renderer.pdb", "/W3", "/O2", "/fp:fast", "/std:c11", "/MD", "/Iinclude", "/Ilib\\libcubiomes", "/DSPNG_STATIC", "/EHsc", "/IC:\\Users\\sbox\\AppData\\Local\\.xmake\\packages\\l\\libspng\\v0.7.1\\f5f3aeeac7514361a04b985c6f19c5a8\\include", "/IC:\\Users\\sbox\\AppData\\Local\\.xmake\\packages\\z\\zlib\\v1.2.13\\c49d6b3d5d794a45b48068cfc464fcf6\\include", "/IC:\\Users\\sbox\\AppData\\Local\\.xmake\\packages\\o\\olive.c\\2022.12.14\\5bad3ea745d6424aaea4e5aa437538ba\\include", "/IC:\\Users\\sbox\\AppData\\Local\\.xmake\\packages\\l\\lua\\v5.4.4\\8864a9cbabd64a59a8b59fa8e1d73971\\include\\lua", "/Fobuild\\.objs\\mc_seed_renderer\\windows\\x64\\debug\\src\\main.c.obj", "src\\main.c"],
+  "file": "src\\main.c"
+},
+{
+  "directory": "z:\\Projects\\Minecraft Seed Renderer",
+  "arguments": ["C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\BuildTools\\VC\\Tools\\MSVC\\14.29.30133\\bin\\HostX64\\x64\\cl.exe", "/c", "/nologo", "/Zi", "/FS", "/Fdbuild\\windows\\x64\\debug\\compile.mc_seed_renderer.pdb", "/W3", "/O2", "/fp:fast", "/std:c11", "/MD", "/Iinclude", "/Ilib\\libcubiomes", "/DSPNG_STATIC", "/EHsc", "/IC:\\Users\\sbox\\AppData\\Local\\.xmake\\packages\\l\\libspng\\v0.7.1\\f5f3aeeac7514361a04b985c6f19c5a8\\include", "/IC:\\Users\\sbox\\AppData\\Local\\.xmake\\packages\\z\\zlib\\v1.2.13\\c49d6b3d5d794a45b48068cfc464fcf6\\include", "/IC:\\Users\\sbox\\AppData\\Local\\.xmake\\packages\\o\\olive.c\\2022.12.14\\5bad3ea745d6424aaea4e5aa437538ba\\include", "/IC:\\Users\\sbox\\AppData\\Local\\.xmake\\packages\\l\\lua\\v5.4.4\\8864a9cbabd64a59a8b59fa8e1d73971\\include\\lua", "/Fobuild\\.objs\\mc_seed_renderer\\windows\\x64\\debug\\src\\util.c.obj", "src\\util.c"],
+  "file": "src\\util.c"
+}]

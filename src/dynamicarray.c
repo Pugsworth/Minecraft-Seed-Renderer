@@ -3,7 +3,7 @@
 
 DynamicArray *dynarray_new(size_t item_size) {
     DynamicArray *dynarray = (DynamicArray*)malloc(sizeof(DynamicArray) * item_size * 16);
-    dynarray->item_size = item_size;
+    dynarray->item_size = (int)item_size;
     dynarray->capacity = 16;
     dynarray->total = 0;
     dynarray->items = malloc(dynarray->capacity * dynarray->item_size);

@@ -2,7 +2,7 @@
 
 #include <stdint.h>
 
-#define SPNG_STATIC
+// #define SPNG_STATIC
 #include <spng.h>
 
 #ifdef _MSC_VER
@@ -10,7 +10,7 @@
 #endif
 #define force_inline __attribute__((always_inline)) inline
 
-#define OLIVEC_AA_RES 1
+// #define OLIVEC_AA_RES 1
 #define OLIVEC_IMPLEMENTATION
 #include <olive.c>
 

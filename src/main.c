@@ -223,6 +223,47 @@ int parse_cmd_test(char* cmd_name, ArgParser* parser)
     puts("Done!");
 }
 
+void lua_image(lua_State* L)
+{
+    luaL_checktype(L, 1, LUA_TTABLE); // pixels
+    luaL_checktype(L, 2, LUA_TNUMBER); // width
+    luaL_checktype(L, 3, LUA_TNUMBER); // height
+
+    int height = lua_tonumber(L, -1);
+    int width = lua_tonumber(L, -2);
+    lua_pop(L, 2); // No longer needed. What's left should be the pixels table.
+
+    int a_size = lua_rawlen(L, -1);
+
+    printf("lua_image size: %i\n", a_size);
+
+    // Get
+    uint32_t* pixels = (uint32_t*)malloc(sizeof(uint32_t) * width * height);
+
+    for (int i = 0; i < width*height; i++) {
+        pixels[i] = 0xFF0000FF;
+    }
+
+    // Olivec_Canvas canvas = olivec_canvas(pixels, width, height, width);
+
+    for (int i = 0; i < (width * height); i++) {
+        lua_pushinteger(L, i+1);
+        lua_gettable(L, -2);
+        uint32_t color = lua_tointeger(L, -1);
+        pixels[i] = color;
+        lua_pop(L, 1);
+    }
+
+    printf("pixels: %p\n", pixels);
+    printf("width: %i\n", width);
+    printf("height: %i\n", height);
+
+    savePNG("test.png", pixels, width, height);
+    free(pixels);
+
+    return 0;
+}
+
 int parse_cmd_lua(char* cmd_name, ArgParser* parser)
 {
     int status, result, i;
@@ -234,20 +275,26 @@ int parse_cmd_lua(char* cmd_name, ArgParser* parser)
     L = luaL_newstate();
     luaL_openlibs(L);
 
-    lua_getglobal(L, "print");
-    printf("Type: %s\n", lua_typename(L, lua_type(L, -1)));
-    lua_pushstring(L, "Hello, World!");
-    result = lua_pcall(L, 1, 1, 0);
+    lua_register(L, "image", lua_image);
+
+    const char* filepath = "assets/scripts/main.lua";
+    // char* abspath = get_absolute_path(filepath);
+
+    result = luaL_dofile(L, filepath);
     if (result != LUA_OK) {
-        fprintf(stderr, "Failed to call print: %s\n", lua_tostring(L, -1));
+        char* err = lua_tostring(L, -1);
+        luaL_traceback(L, L, err, 2);
+        const char* traceback = lua_tostring(L, -1);
+        fprintf(stderr, "Failed to load script: %s\n", traceback);
+        // fprintf(stderr, "Failed to load script: %s\n", err);
         return -1;
     }
-
-    lua_load(L, NULL, "print('Hello, World!')", "test", NULL);
 
     fflush(stdout);
 
     lua_close(L);
+
+    audio_play(AUDIO_ALERT);
 
     return 0;
 }

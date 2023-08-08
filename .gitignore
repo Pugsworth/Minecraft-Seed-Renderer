@@ -1,11 +1,16 @@
+# Xmake cache
+.xmake/
+build/
+
+# MacOS Cache
+.DS_Store
+
 .cproject
 .project
-*.o
-*.a
+*.MacOS*.a
 a.out
 test.png
 
-build/
 lib/
 renders/
 
